@@ -1,0 +1,46 @@
+name: CI/CD Sederhana PHP
+
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    name: Build dan Test
+    runs-on: ubuntu-latest
+
+    steps:
+    # Langkah 1: Mengambil kode dari repository (Checkout)
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    # Langkah 2: Menyiapkan lingkungan PHP
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2' # Sesuaikan versi PHP jika perlu
+
+    # Langkah 3: Menjalankan tes sintaks (Linting) pada file index.php
+    - name: Cek Sintaks PHP
+      run: php -l index.php
+
+    # Jika Anda memiliki banyak file, gunakan perintah ini sebagai gantinya:
+    # run: find . -name "*.php" -print0 | xargs -0 -n1 php -l
+
+  deploy:
+    name: Deploy ke Server
+    needs: build-and-test # Deploy hanya jalan jika 'build-and-test' sukses
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' # Hanya deploy jika di branch main
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    # Langkah 4: Simulasi Deployment
+    # Ganti bagian ini dengan 'action' yang sesuai, misalnya FTP atau SSH
+    - name: Proses Deploy
+      run: echo "Proses deployment ke server sedang dijalankan..."
